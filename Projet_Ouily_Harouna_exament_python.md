@@ -33,7 +33,7 @@
     
 4. [Conclusion](#conclusion)
 
-   
+5. [Bibliograohy](#bibliograohy)
    
 
 # Introduction  
@@ -78,45 +78,101 @@ the correlation matrix between two numerical variables, the graphs in PCA, ACM, 
 
 # Application with the library plotly
 ## Pie chart
+
+
 This type of diagram allows the percentage distribution for each category of variable.
 Here we use data from an anonymous source to highlight the two major events that 
 the two major events that have disrupted the lives of families in three regions of Burkina Faso.
 ![image](image/pie_chart.png)
-## lien for the souce code
 
-## Boxplot graph or moustache box 
-The boxplot is a way to represent the repartition of data in relation to the median. 
-this part deals with the boxplot graphical representation of the means of payment according to the type of cab borrowed. these data are found in the seaborne library of python.
-
-![image](image/boxplot_taxi.png)
- 
- ```python
-import plotly.express as px
-
-fig = px.violin(datataxi, y =datataxi['fare'], x = datataxi['payment'],color =datataxi['color'],
-    box=True, points="all", hover_data=datataxi.columns)
-fig.show()
+```python
+import plotly 
+from plotly import __version__
+print(__version__)
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+```
+```python
+import plotly as py
+import plotly.graph_objs as go
+import pandas  as pd
 ```
 
 
 
-# Combined histogram and density graphing 
+```python
+from plotly.subplots import make_subplots
+labels = ["Cascades", "Est", "Sahel"]
+fig = make_subplots(rows=1, cols=2, specs=[[{'type':'domain'}, {'type':'domain'}]])
+fig.add_trace(go.Pie(labels=labels, values=troiseve["climatique"],
+               name="climatique"), 1, 1)
+fig.add_trace(go.Pie(labels=labels, values=troiseve["insecurite"],  
+            name="insecurite"),1, 2)
+fig.update_traces(hole=.4, hoverinfo="label+percent+name")
+fig.update_layout(
+    title_text="Deux grands événements qui ont impacté la vie des familles selon les trois region au Burkina Faso",
+    annotations=[dict(text='climatique', x=0.16, y=0.5, font_size=20, showarrow=False),
+                dict(text='insécurité', x=0.84, y=0.5, font_size=20, showarrow=False)])
+fig.show()
+```
+
+
+## Boxplot graph or moustache box 
+
+The boxplot is a way to represent the repartition of data in relation to the median. 
+this part deals with the boxplot graphical representation of the means of payment according to the type of cab borrowed. these data are found in the seaborne library of python.
+
+![image](image/boxplot_taxi.png)
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+datataxi=sns.load_dataset('taxis')
+datataxi.head(2)
+```
+
+ ```python
+import plotly.express as px
+
+fig = px.violin(datataxi, y =datataxi['fare'], 
+x= datataxi['payment'],color =datataxi['color'],
+    box=True, points="all", hover_data=datataxi.columns)
+fig.show()
+```
+
+## Combined histogram and density graphing 
  
 A histogram is a way to represent the dipersion of the data with respect to a central value which is the mean
 We will use 4 randomly simulated variables to make the graphical representation
 
 ![image](image/histogramme_plot.png)
-## *lien for the souce code
+
+```python
+import plotly.figure_factory as ff
+import numpy as np
+
+x1 = np.random.randn(200) - 2
+x2 = np.random.randn(200)
+x3 = np.random.randn(200) + 2
+x4 = np.random.randn(200) + 4
+
+hist_data = [x1, x2, x3, x4]
+group_labels = ['Group 1', 'Group 2', 'Group 3', 'Group 4']
+
+fig = ff.create_distplot(hist_data, group_labels, bin_size=.2)
+fig.show()
+```
+
 
 ## Dynamic graphical representation of scatterplot 
-Nous allons utiliser le jeu de donnée gapminder contenu dans la librairie plotly
-Ce jeu de données inclut l’espérance de vie (lifeExp), la population (pop) et le PIB par habitant (gdpPercap) sur 12 années (aux 5 ans entre 1952 et 2007)
+We will use the gapminder dataset contained in the plotly library
+This dataset includes life expectancy (lifeExp), population (pop) and GDP per capita (gdpPercap) over 12 years (every 5 years between 1952 and 2007)
+
 ![image](image/dynamique_scaterplot.png)
 
 ![image](image/scaterplot_live_pib.png)
 
 ```python
-import plotly.express as px
+import plotly.express as px 
 df = px.data.gapminder()
 fig = px.scatter(df, x="gdpPercap", y="lifeExp", animation_frame="year", animation_group="country",
            size="pop", color="continent", hover_name="country", facet_col="continent",
@@ -141,7 +197,20 @@ iris dataset which is composed of 5 variables: -*Sepal.Length* - *Sepal.Width* -
 
 ![image](image/matrice_correlation_plot.png)
 
-## *lien for the souce code
+```python
+import plotly.express as px
+data_base  = px.data.iris()
+fig = px.scatter_matrix(data_base, dimensions=["sepal_width", "sepal_length", "petal_width", "petal_length"], color="species")
+fig.show()
+```
 
 ## Conclusion
-The objective was to represent graphs on data with the Plotly library. This library allowed us to make circular graphs, boxplots. Then we made a simulation of variables to make histograms and density curves. Finally the library allowed us to make scatterplots and a correlation matrix
+The objective was to represent graphs on data with the Plotly library. This library allowed us to make circular graphs, boxplots. Then we made a simulation of variables to make histograms and density fonction . Finally the library allowed us to make scatterplots and a correlation matrix
+
+
+# Bibliograohy
+
+ * https://datascientest.com/realiser-de-la-data-visualisation-grace-a-plotly
+ * https://mrmint.fr/logistic-regression-iris-dataset
+ * http://euclid.psych.yorku.ca/www/psy6135/tutorials/gapminder.html
+ 
